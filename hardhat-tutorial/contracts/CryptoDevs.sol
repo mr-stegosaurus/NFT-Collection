@@ -12,8 +12,11 @@ contract CryptoDevs is ERC721Enumerable, Ownable {
 
     string _baseTokenURI;
 
-    // _price is the price of one Crypto Dev NFT
-    uint256 public _price = 0.01 ether;
+    // _presalePrice is the price of one Crypto Dev NFT during the presale
+    uint256 public _presalePrice = 0.01 ether;
+
+    // _price is the price of one Crypto Dev NFT after the presale
+    uint256 public _price = 0.05 ether;
 
     // _paused is used to pause the contract in case of an emergency
     bool public _paused;
@@ -67,12 +70,24 @@ contract CryptoDevs is ERC721Enumerable, Ownable {
         require(presaleStarted && block.timestamp < presaleEnded, "presale is not running");
         require(whitelist.whitelistedAddresses(msg.sender), "you are not whitelisted");
         require(tokenIds < maxTokenIds, "exceed maximum crypto devs supply");
-        require(msg.value >= _price, "ether sent is not correct");
+        require(msg.value >= _presalePrice, "ether sent is not correct");
         tokenIds += 1;
         //_safeMint is a safer version of the _mint function as it ensures that
         // if the address being minted to is a contract, then it knows to deal with ERC721 tokens
         // if the address being minted to is not a contract, it works the same way as _mint
         _safeMint(msg.sender, tokenIds);
+    }
+
+    /**
+     * @dev mint allows a user to mint 1 NFT per transaction after the presale has ended
+     * at this point, users don't have to be whitelisted, and the price has doubled
+     */
+    function mint() public payable onlyWhenNotPaused {
+        require(presaleStarted && block.timestampe >= presaleEnded, "presale has not yet ended");
+        require(tokenIds < maxTokenIds, "exceed maximum crypto devs supply");
+        require(msg.value >= _price, "ether sent is not correct");
+        tokenIds += 1;
+        _safeMint(msg.sender, tokenIds)
     }
 
     /**
