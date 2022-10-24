@@ -83,11 +83,11 @@ contract CryptoDevs is ERC721Enumerable, Ownable {
      * at this point, users don't have to be whitelisted, and the price has doubled
      */
     function mint() public payable onlyWhenNotPaused {
-        require(presaleStarted && block.timestampe >= presaleEnded, "presale has not yet ended");
+        require(presaleStarted && block.timestamp >= presaleEnded, "presale has not yet ended");
         require(tokenIds < maxTokenIds, "exceed maximum crypto devs supply");
         require(msg.value >= _price, "ether sent is not correct");
         tokenIds += 1;
-        _safeMint(msg.sender, tokenIds)
+        _safeMint(msg.sender, tokenIds);
     }
 
     /**
