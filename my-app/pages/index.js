@@ -1,4 +1,4 @@
-import { Contract, contract, providers, utils } from "ethers";
+import { Contract, providers, utils } from "ethers";
 import { _TypedDataEncoder } from "ethers/lib/utils";
 import Head from "next/head";
 import React, { useEffect, useRef, useState } from "react";
@@ -221,7 +221,7 @@ export default function Home() {
   // the array at the end of the function call represents what state changes will trigger this effect
   // in this case, whenever the value of 'walletConnected' changes - this effect will  be called
   useEffect(() => {
-    // if wallet is not connected, create a new instance of Web3modal and connect the Metamask
+    // if wallet is not connected, create a new instance of Web3modal and connect to Metamask
     if (!walletConnected) {
       //assign the web3modal class to the reference object by setting it's 'current' value
       // the current value is persisted throughout as long as this page is open
@@ -289,7 +289,7 @@ export default function Home() {
   if (!presaleStarted) {
     return (
       <div>
-        <div className={styles.description}>Presale hasnt started!</div>
+        <div className={styles.description}>Presale hasn't started!</div>
       </div>
     );
   }
