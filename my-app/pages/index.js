@@ -25,6 +25,32 @@ export default function Home() {
   /**
    * presaleMint: Mint an NFT during the presale
    */
+  const presaleMint = async () => {
+    try {
+      // we need a signer here since this is a write transaction
+      const signer = await getProviderOrSigner(true);
+      // create a new instance of the contract with a signer, which allows
+      // update methods
+      const nftContract = new Contract(NFT_CONTRACT_ADDRESS, abi, signer);
+      // call teh presaleMinte from the contract, only whitelisted addresses would be able to mint
+      const tx = await nftContract.presaleMint({
+        // value signifies the cost of one crypto dev which is "0.01" eth.
+        // we are parsing '0.01' string to ether using the utils library from ethers.js
+        value: utils.parseEther("0.01"),
+      });
+      setLoading(true);
+      // wait for the transaction to get mined
+      await tx.wait();
+      setLoading(false);
+      window.alert("You successfully minted a Crypto Dev!");
+    } catch (err) {
+      console.error(err);
+    }
+  };
+  
+  /*
+  publicMint: mint an NFT after the presale
+  */
   const publicMint = async () => {
     try {
       // We need a Signer here since this is a write transaction.
